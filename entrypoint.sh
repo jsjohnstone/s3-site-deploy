@@ -17,6 +17,11 @@ if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
   exit 1
 fi
 
+if [ -z "$AWS_CF_ID" ]; then
+  echo "AWS_CF_ID is not set. Quitting."
+  exit 1
+fi
+
 # Default to us-east-1 if AWS_REGION not set.
 if [ -z "$AWS_REGION" ]; then
   AWS_REGION="us-east-1"
@@ -43,6 +48,8 @@ sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
               --profile s3-sync-action \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
+              
+sh -c "aws cloudfront create-invalidation --distribution-id ${AWS_CF_ID} --paths /*"
 
 # Clear out credentials after we're done.
 # We need to re-run `aws configure` with bogus input instead of
