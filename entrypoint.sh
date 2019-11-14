@@ -32,6 +32,16 @@ if [ -n "$AWS_S3_ENDPOINT" ]; then
   ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
 fi
 
+if [ -z "$GITHUB_SHA" ]; then
+  GITHUB_SHA="none"
+fi
+
+timestamp=$(date +%s)
+
+# Append date to index.html
+APPEND="<!-- $GITHUB_SHA $timestamp -->"
+echo $APPEND >> index.html
+
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
