@@ -39,16 +39,10 @@ else
   echo "x AWS_S3_ENDPOINT is not set, using default."
 fi
 
-if [ -z "$GITHUB_SHA" ]; then
-  GITHUB_SHA="none"
-fi
-
 # Check if APPEND_FILE is set - if so, append timestamp to file
 if [ -n "$APPEND_FILE" ]; then
-  timestamp=$(date +%s)
-  APPEND_STR="<!-- $GITHUB_SHA $timestamp -->"
-  echo $APPEND_STR >> $APPEND_FILE
-  echo "- APPEND_FILE is set. Appending timetsamp $APPEND_STR."
+  echo $'\n<!-- Build: '${GITHUB_SHA:-[none]}' '$(date -u)' -->' >> $APPEND_FILE
+  echo "- APPEND_FILE is set. Appending timestamp to $APPEND_FILE."
 else
   echo "x APPEND_FILE is not set, skipping appending timestamp."
 fi
