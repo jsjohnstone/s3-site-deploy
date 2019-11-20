@@ -31,15 +31,15 @@ if [ -z "$GITHUB_SHA" ]; then
   GITHUB_SHA="none"
 fi
 
-timestamp=$(date +%s)
-
-# Append date to index.html
-APPEND="<!-- $GITHUB_SHA $timestamp -->"
-echo $APPEND >> index.html
+# Check if APPEND_FILE is set - if so, append timestamp to file
+if [ "$APPEND_FILE" ]; then
+  timestamp=$(date +%s)
+  APPEND_STR="<!-- $GITHUB_SHA $timestamp -->"
+  echo $APPEND_STR >> $APPEND_FILE
+fi
 
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
-# https://github.com/jakejarvis/s3-sync-action/issues/1
 aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
 ${AWS_ACCESS_KEY_ID}
 ${AWS_SECRET_ACCESS_KEY}
