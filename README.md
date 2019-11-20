@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: jsjohnstone/s3-sync-action@master
+    - uses: jsjohnstone/s3-site-deploy@master
       with:
         args: --acl public-read --follow-symlinks --delete --exclude '.git/*'
       env:
