@@ -1,4 +1,4 @@
-# Sync S3 Bucket and Clear Cloudfront Cache 🔄
+# Deploy S3 Static Website 🔄
 
 ### S3 Deployment
 This simple action uses the [vanilla AWS CLI](https://docs.aws.amazon.com/cli/index.html) to sync a directory (either from your repository or generated during your workflow) with a remote S3 bucket.
