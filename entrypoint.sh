@@ -3,28 +3,40 @@
 set -e
 
 if [ -z "$AWS_S3_BUCKET" ]; then
-  echo "AWS_S3_BUCKET is not set. Quitting."
+  echo "x AWS_S3_BUCKET is not set. Quitting."
   exit 1
+else
+  echo "- AWS_S3_BUCKET is set."
 fi
 
 if [ -z "$AWS_ACCESS_KEY_ID" ]; then
-  echo "AWS_ACCESS_KEY_ID is not set. Quitting."
+  echo "x AWS_ACCESS_KEY_ID is not set. Quitting."
   exit 1
+else
+  echo "- AWS_ACCESS_KEY_ID is set."
 fi
 
 if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-  echo "AWS_SECRET_ACCESS_KEY is not set. Quitting."
+  echo "x AWS_SECRET_ACCESS_KEY is not set. Quitting."
   exit 1
+else
+  echo "- AWS_SECRET_ACCESS_KEY is set."
 fi
 
 # Default to us-east-1 if AWS_REGION not set.
 if [ -z "$AWS_REGION" ]; then
   AWS_REGION="us-east-1"
+  echo "x AWS_REGION not set, using default."
+else
+  echo "- AWS_REGION is set."
 fi
 
 # Override default AWS endpoint if user sets AWS_S3_ENDPOINT.
 if [ -n "$AWS_S3_ENDPOINT" ]; then
   ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
+  echo "- AWS_S3_ENDPOINT is set."
+else
+  echo "x AWS_S3_ENDPOINT is not set, using default."
 fi
 
 if [ -z "$GITHUB_SHA" ]; then
@@ -32,10 +44,13 @@ if [ -z "$GITHUB_SHA" ]; then
 fi
 
 # Check if APPEND_FILE is set - if so, append timestamp to file
-if [ "$APPEND_FILE" ]; then
+if [ -n "$APPEND_FILE" ]; then
   timestamp=$(date +%s)
   APPEND_STR="<!-- $GITHUB_SHA $timestamp -->"
   echo $APPEND_STR >> $APPEND_FILE
+  echo "- APPEND_FILE is set. Appending timetsamp $APPEND_STR."
+else
+  echo "x APPEND_FILE is not set, skipping appending timestamp."
 fi
 
 # Create a dedicated profile for this action to avoid conflicts
@@ -55,8 +70,8 @@ sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
               ${ENDPOINT_APPEND} $*"
 
 # Check if Cloudfront Cache ID is set - if so, create an invalidation.
-
 if [ "$AWS_CF_ID" ]; then
+  echo "AWS_CF_ID set. Creating invalidation..."
   sh -c "aws cloudfront create-invalidation --distribution-id ${AWS_CF_ID} --paths \"/*\""
 else
   echo "AWS_CF_ID is not set. Skipping cache bust step..."
