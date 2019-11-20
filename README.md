@@ -7,7 +7,7 @@ This simple action uses the [vanilla AWS CLI](https://docs.aws.amazon.com/cli/in
 If enabled, the action will add an HTML-formatted timestamp to the end of a specified file.
 
 ### Cloudfront Cache Invalidation
-Once deployed, the action will invalidate the cloudfront cache for your S3 static site.
+Once deployed, the action will invalidate the cloudfront distribution cache for your S3 static site.
 
 
 ## Usage
@@ -46,8 +46,8 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'eu-west-2'   # optional: defaults to us-east-1
-        AWS_CF_ID: ${{ secrets.AWS_CF_ID }}  
-        APPEND_FILE: 'index.html'
+        AWS_CF_ID: ${{ secrets.AWS_CF_ID }}    # optional: enables cloudfront distribution invalidation 
+        APPEND_FILE: 'index.html'   # optional: enables timestamp appending to specified file
 ```
 
 
@@ -64,7 +64,7 @@ The following settings must be passed as environment variables as shown in the e
 | `AWS_S3_ENDPOINT` | The endpoint URL of the bucket you're syncing to. Can be used for [VPC scenarios](https://aws.amazon.com/blogs/aws/new-vpc-endpoint-for-amazon-s3/) or for non-AWS services using the S3 API, like [DigitalOcean Spaces](https://www.digitalocean.com/community/tools/adapting-an-existing-aws-s3-application-to-digitalocean-spaces). | `env` | No | Automatic (`s3.amazonaws.com` or AWS's region-specific equivalent) |
 | `SOURCE_DIR` | The local directory (or file) you wish to sync/upload to S3. For example, `public`. Defaults to your entire repository. | `env` | No | `./` (root of cloned repository) |
 | `DEST_DIR` | The directory inside of the S3 bucket you wish to sync/upload to. For example, `my_project/assets`. Defaults to the root of the bucket. | `env` | No | `/` (root of bucket) |
-| `AWS_CF_ID` | Your CloudFront ID to invalidate. | `secret env` | No | N/A |
+| `AWS_CF_ID` | The ID of a Cloudfront Distribution to invalidate. | `secret env` | No | N/A |
 | `APPEND_FILE` | Name of a file to append timestamp/Github commit hash to before deployment (useful for checking cache invalidation has succeeded). | `env` | No | N/A |
 
 
