@@ -71,10 +71,10 @@ sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
 
 # Check if Cloudfront Cache ID is set - if so, create an invalidation.
 if [ "$AWS_CF_ID" ]; then
-  echo "AWS_CF_ID set. Creating invalidation..."
+  echo "- AWS_CF_ID set. Creating invalidation..."
   sh -c "aws cloudfront create-invalidation --distribution-id ${AWS_CF_ID} --paths \"/*\""
 else
-  echo "AWS_CF_ID is not set. Skipping cache bust step..."
+  echo "x AWS_CF_ID is not set. Skipping cache bust step..."
 fi
 
 # Clear out credentials after we're done.
