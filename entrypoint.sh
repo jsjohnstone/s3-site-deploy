@@ -41,7 +41,7 @@ fi
 
 # Check if APPEND_FILE is set - if so, append timestamp to file
 if [ -n "$APPEND_FILE" ]; then
-  echo $'\n<!-- Build: '${GITHUB_SHA:-[none]}' '$(date -u)' -->' >> $APPEND_FILE
+  echo $'\n<!-- Build: '${GITHUB_REPOSITORY:-[none]} ${GITHUB_REF#refs/heads/:-[none]} ${GITHUB_SHA:-[none]}' '$(date -u)' -->' >> $APPEND_FILE
   echo "- APPEND_FILE is set. Appending timestamp to $APPEND_FILE."
 else
   echo "x APPEND_FILE is not set, skipping appending timestamp."
